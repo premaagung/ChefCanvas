@@ -1,36 +1,156 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ChefCanvas
+
+> AI-powered menu ideation and recipe management for professional kitchens.
+
+ChefCanvas turns a list of ingredients and a flavor vision into a fully structured, kitchen-ready recipe — complete with scaled measurements, step-by-step method, flavor analysis, and chef recommendations. Built for working chefs who need to move fast without sacrificing craft.
+
+---
+
+## Features
+
+- **AI recipe generation** — Describe your components and flavor intention. ChefCanvas calls Gemini 2.0 Flash and returns a complete recipe in seconds
+- **Scaled measurements** — Set your target yield (pax) and every ingredient is calculated to match
+- **Fully editable output** — Every field the AI generates is editable inline before saving
+- **Portion rescaling** — Saved a recipe for 10 pax but need 35 tonight? Rescale any recipe with one click — pure frontend math, no AI call needed
+- **Recipe Book** — Browse, filter, edit, and delete your saved recipes. Filter by course type with one click
+- **PDF export** — Export any recipe as a clean, print-ready A4 PDF for the pass
+- **Copy as text** — Copy the full recipe as plain text for WhatsApp, email, or kitchen display systems
+- **Course types** — Amuse-Bouche, Appetizer, Soup, Main Course, Dessert
+
+---
+
+## Tech Stack
+
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16.2.0 (App Router, Turbopack) |
+| Language | TypeScript |
+| Styling | Tailwind CSS v4 |
+| Database | SQLite via Prisma 7 (local) |
+| AI | Gemini 2.0 Flash (direct fetch) |
+| PDF | jsPDF |
+| Fonts | Cormorant Garamond, DM Mono |
+
+---
 
 ## Getting Started
 
-First, run the development server:
+### Prerequisites
+
+- Node.js 18+
+- A [Gemini API key](https://aistudio.google.com/app/apikey)
+
+### Installation
 
 ```bash
+# Clone the repository
+git clone https://github.com/your-username/chefcanvas.git
+cd chefcanvas
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Add your GEMINI_API_KEY to .env.local
+
+# Set up the database
+npx prisma generate
+npx prisma db push
+
+# Start the development server
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to see the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Environment Variables
 
-## Learn More
+Create a `.env.local` file in the root with the following:
 
-To learn more about Next.js, take a look at the following resources:
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+DATABASE_URL="file:./prisma/dev.db"
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Project Structure
 
-## Deploy on Vercel
+```
+app/
+├── api/
+│   ├── analyze/route.ts        # Gemini API route
+│   └── recipes/
+│       ├── route.ts            # GET all, POST create
+│       └── [id]/route.ts       # GET one, PUT update, DELETE
+├── canvas/page.tsx             # Main form + editable result
+├── recipes/
+│   ├── page.tsx                # Recipe Book listing
+│   └── [id]/page.tsx          # Recipe detail, edit, rescale
+└── page.tsx                    # Landing page
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+components/
+├── ChefCanvas/
+│   ├── CanvasForm.tsx          # Main input form
+│   ├── ComponentInput.tsx      # Ingredient row input
+│   └── CourseSelector.tsx      # Course type pill selector
+├── Dashboard/
+│   └── EditableRecipe.tsx      # AI output editable form
+└── PDF/
+    └── DownloadButton.tsx      # jsPDF export button
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+lib/
+└── prisma.ts                   # Prisma singleton client
+
+types/
+└── index.ts                    # TypeScript interfaces
+```
+
+---
+
+## Screenshots
+
+> Coming soon.
+
+---
+
+## Roadmap
+
+- [ ] Vercel deployment with Turso (hosted SQLite)
+- [ ] Duplicate recipe
+- [ ] Print-optimized view (`window.print()`)
+- [ ] Authentication (NextAuth.js + Google)
+- [ ] Recipe versioning
+- [ ] Prep time and cook time fields
+- [ ] Cost per portion calculator
+- [ ] Image upload (plating photos)
+
+---
+
+## Contributing
+
+Contributions are welcome. Please open an issue first to discuss what you'd like to change.
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feat/your-feature`)
+3. Commit your changes (`git commit -m 'feat: add your feature'`)
+4. Push to the branch (`git push origin feat/your-feature`)
+5. Open a Pull Request
+
+---
+
+## License
+
+[MIT](./LICENSE) — © 2025 A. A. Bagus Premananta Kumara
+
+---
+
+## Acknowledgements
+
+- [Google Gemini](https://deepmind.google/technologies/gemini/) for the AI backbone
+- [Prisma](https://www.prisma.io/) for the database layer
+- [jsPDF](https://github.com/parallax/jsPDF) for PDF generation
+- [Vercel](https://vercel.com/) for hosting
